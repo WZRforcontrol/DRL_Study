@@ -1,8 +1,11 @@
 # 我的强化学习笔记 (RL & DRL)
 
-**Author:** Z.R.Wang  
+**Author:** Z.R.Wang
+
 **Date:** Aug 20 - ? , 2024
+
 **Location:** Yanshan University
+
 **Email:** [wangzhanran@stumail.ysu.edu.cn](mailto:wangzhanran@stumail.ysu.edu.cn)
 
 ## Reference
