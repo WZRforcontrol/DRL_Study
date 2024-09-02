@@ -1,0 +1,58 @@
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(current_dir, 'E:\Anaconda\Projects\RL\Study'))
+from parking_AC import ActorCritic
+import random
+import gym
+import numpy as np
+import torch
+import highway_env
+import datetime
+import warnings
+warnings.filterwarnings("ignore")
+
+def run_trained_agent(env, agent, video_folder='Auto_Drive/parking/videos_ac'):
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    video_folder = f"{video_folder}_{timestamp}"
+    env = gym.wrappers.RecordVideo(env, video_folder, episode_trigger=lambda x: True)
+    state = env.reset()
+    state = state['observation']
+    done = False
+    total_reward = 0
+    while not done:
+        env.render()
+        action = agent.take_action(state)
+        next_state, reward, done, _ = env.step(action)
+        next_state = next_state['observation']
+        state = next_state
+        total_reward += reward
+    print(f"Total Reward: {total_reward}")
+    env.close()
+
+config = {
+        "action": {
+            "type": "DiscreteMetaAction"
+        }
+    }
+env = gym.make('parking-v0', config=config)
+state_dim = env.observation_space['observation'].shape[0]
+action_dim = env.action_space.n
+
+actor_lr = 1e-3
+critic_lr = 1e-2
+num_episodes = 500
+hidden_dims = [128,128]
+gamma = 0.98
+epsilon = 0.01
+batch_size = 64
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+random.seed(0)
+np.random.seed(0)
+env.seed(0)
+torch.manual_seed(0)
+agent = ActorCritic(state_dim, action_dim, hidden_dims, actor_lr, critic_lr, 
+                gamma, device, num_episodes, env)
+
+agent.load_model('Auto_Drive/parking/AC_MODEL/actor_critic_model.pth')
+run_trained_agent(env, agent)

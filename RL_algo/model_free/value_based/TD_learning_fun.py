@@ -1,3 +1,16 @@
+"""
+    TD learning based on function 算法
+    
+
+    代码库中包括 DQN , CNN DQN , Double DQN , Dueling DQN 
+
+    Author: Z.R.Wang
+    Aug,26,2024 in YSU
+    Emile: wangzhanran@stumail.ysu.edu.cn
+
+    reference:强化学习的数学原理(西湖大学赵世钰老师),动手学强化学习https://github.com/boyu-ai/Hands-on-RL
+"""
+
 import random
 import numpy as np
 import collections
@@ -149,7 +162,7 @@ class DQN:
         device: torch.device, 设备(cpu或gpu)
     '''
     def __init__(self,state_dim, action_dim, hidden_dims, learning_rate, 
-                 gamma,epsilon, target_update, device,env) -> None:
+                 gamma, epsilon, target_update, device,env) -> None:
         self.action_dim = action_dim
         self.main_q_net = Qnet(state_dim, action_dim, hidden_dims).to(device) # Q网络，也就是我们要训练的网络
         self.target_q_net = Qnet(state_dim, action_dim, hidden_dims).to(device) # 目标网络,就是隔一段时间更新一次

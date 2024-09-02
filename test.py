@@ -1,30 +1,18 @@
-import gym
-import time
+import torch
 
-# 生成环境，并指定渲染模式
-env = gym.make('CartPole-v1', render_mode='human')
+# 打印 PyTorch 版本
+print("PyTorch 版本:", torch.__version__)
 
-# 环境初始化
-state = env.reset()
+# 检查 CUDA 是否可用
+cuda_available = torch.cuda.is_available()
+print("CUDA 是否可用:", cuda_available)
 
-# 循环交互
-while True:
-    # 渲染画面
-    env.render()
-
-    # 从动作空间随机获取一个动作
-    action = env.action_space.sample()
-
-    # agent与环境进行一步交互，并直接解包返回的五个值
-    state, reward, done, truncated, info = env.step(action)
-    print('state = {0}; reward = {1}'.format(state, reward))
-
-    # 判断当前 episode 是否完成
-    if done or truncated:
-        print('done or truncated')
-        break
-
-    time.sleep(0.1)
-
-# 环境结束
-env.close()
+if cuda_available:
+    # 打印 CUDA 版本
+    print("CUDA 版本:", torch.version.cuda)
+    
+    # 打印 cuDNN 版本
+    print("cuDNN 版本:", torch.backends.cudnn.version())
+    
+    # 打印 CUDA 库的位置
+    print("CUDA 库位置:", torch.cuda.get_device_properties(0))
